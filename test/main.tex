@@ -1,0 +1,304 @@
+%% <head>
+\documentclass{article}
+\usepackage{amsmath,amssymb,multicol,ulem,makecell,commath,pifont}
+\usepackage[a4paper,margin=0.1in]{geometry}
+\usepackage[inline]{enumitem}
+
+% math-mode version of "c" column type
+\newcolumntype{C}{>{$}c<{$}}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+
+% draw the vertical divider
+\setlength{\columnseprule}{0.2pt}
+
+% remove all section numbers without having to add *
+\setcounter{secnumdepth}{0}
+
+% flush-left all itemize and enumerate lists
+\setlist[itemize,enumerate]{leftmargin=*}
+\setlength{\parindent}{0pt}
+
+% <headings>
+\makeatletter
+% ensure non-recursive remaps
+\let\TMPsection\section
+\let\TMPsubsection\subsection
+\renewcommand{\TMPsection}{\@startsection{section}{2}{0pt}{1ex}{1.2ex}{\normalsize\bfseries\fbox}}
+\renewcommand{\TMPsubsection}{\@startsection{subsection}{3}{0pt}{1ex}{0.8ex}{\footnotesize\bfseries\uline}}
+% h1-h4 declarations
+\renewcommand{\title}{\@startsection{section}{1}{0pt}{1ex}{1.2ex}{\Large\bfseries\uline}}
+\renewcommand{\section}[1]{\TMPsection{#1}}
+\renewcommand{\subsection}[1]{\TMPsubsection{#1}}
+\renewcommand{\paragraph}{\@startsection{paragraph}{4}{0pt}{1.5ex}{-0.8em}{\bfseries}}
+% </headings>
+
+% force document-wide displaystyle by default
+\everymath{\displaystyle}
+
+\newcommand{\documentinit} {
+	\footnotesize
+	\setlength{\abovedisplayskip}{2pt}
+	\setlength{\belowdisplayskip}{2pt}
+	\setlength{\abovedisplayshortskip}{0pt}
+	\setlength{\belowdisplayshortskip}{0pt}
+}
+
+% global shorthands
+\newcommand{\mat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+\let\TMPepsilon\epsilon\def\epsilon{\varepsilon}
+\newcommand{\build}{\ding{115}\ }
+\let\div\relax
+\DeclareMathOperator{\div}{div}
+
+% multivariable calculus!
+\renewcommand{\d}{\,\mathrm{d}}
+\newcommand{\p}{\partial}
+\newcommand{\g}{\nabla}
+\newcommand{\dd}[2]{\frac{\d{#1}}{\d{#2}}}
+\newcommand{\pp}[2]{\frac{\p{#1}}{\p{#2}}}
+
+% </head>
+
+\begin{document}
+\documentinit
+
+\begin{multicols*}{2}
+
+	\title{MA2104 Multivariable Calculus}
+
+	%% set a {\mathbf{a}} set b {\mathbf{b}} set c {\mathbf{c}} set dot {\cdot}
+	%% set proj {\mathrm{proj}} set comp {\mathrm{comp}}
+	\section{Fundamentals}
+	$\proj_\b\a = \frac{\a\dot\b}{\b\dot\b}\b$
+	\quad;\quad
+	$\comp_\b\a = \frac{\a\dot\b}{||\b||}\b$ (length of projection) \\\\
+	\build let $k:=$ len. of proj. of $\a$ onto $\b$. By
+	Pythagoras, $k=\frac{\a\dot\b}{\b\dot\b}$
+
+	Area of parallelepiped $= |\a\dot(\b\times\c)|$ (order doesn't matter)
+	%% unset a b dot proj comp
+
+
+	\section{Integration hacks}
+	Trigonometric reduction.
+	\begin{itemize}
+		\item $\int\sin^nx\d{x}
+			      = \frac{n-1}n\int\sin^{n-2}x\d{x}
+			      - \frac{\cos x\sin^{n-1}x}n$
+		      % source: ../python/shorthands.py
+		\item $\int\cos^nx\d{x}
+			      = \frac{n-1}n\int\cos^{n-2}x\d{x}
+			      + \frac{\sin x\cos^{n-1}x}n$
+		      % source: ../python/shorthands.py
+		\item $\int\csc^nx\d{x}
+			      = \frac{n-2}{n-1}\int\csc^{n-2}x\d{x}
+			      - \frac{\csc^{n-2}x\cot x}{n-1}$
+		      % source: https://www.integral-calculator.com
+		\item $\int\sec^nx\d{x}
+			      = \frac{n-2}{n-1}\int\sec^{n-2}x\d{x}
+			      + \frac{\sec^{n-2}x\tan x}{n-1}$
+		      % source: https://www.integral-calculator.com
+		\item $\int\tan^nx\d{x}
+			      = \frac{\tan^{n-1}x}{n-1}
+			      - \int\tan^{n-2}x\d{x}$
+		      % source: ../python/shorthands.py
+		\item $\int\cot^nx\d{x}
+			      = -\frac{\cot^{n-1}x}{n-1}
+			      - \int\cot^{n-2}x\d{x}$
+		      % source: ../python/shorthands.py
+	\end{itemize}
+
+
+	\section{Parameterizing Lines $R(t)$}
+	Let curve $C:R(t)=(x(t),y(t))$. Tangent vector is
+	$R'(t):=(x'(t),y'(t))$ \\\\
+	\textbf{Velocity}
+	$\textstyle\norm{R'(t)}=\sqrt{x'(t)^2+y'(t)^2}$
+	\quad;\quad
+	\textbf{Arc Length} $\int_{t_1}^{t_2}\norm{R'(t)}\d t$
+	\paragraph{Unit Speed Parameterization} is an $R(t)$ such that
+	$\frac{\d{\text{(ArcLen)}}}{\d t} = 1$.
+
+	\section{Level Curves}
+	$k$-level set of $f(x,y)$ is the set $\{(x,y)\in\R^2:f(x,y)=k\}$
+
+	\section{Multivariable Limits}
+	%% set lim #1#2#3#4{\TMPlim_{(#1,#2)\to(#3,#4)}}
+	Let $f:\R^2\to\R$. $\lim xyab f(x,y)=L$ if for any
+	$\epsilon>0$, $\exists\;\delta > 0$ such that \\\\
+	$0<\norm{\mat{x\\y}-\mat{a\\b}}<\delta \implies |f(x,y)-L|<\epsilon$
+	\subsection{Showing that limits do not exist}
+	Pick functions that converge to the same limits for each variable,
+	and show that the limit reached changes depending on the function
+	chosen.
+	$$\lim xy00 \frac{xy}{x^2+y^2};\ \text{send }x\to y\
+		(f(x,y)\to\tfrac1 2);\ \text{send }x\to2y\ (f(x,y)\to\tfrac2 3)$$
+	%% unset lim
+
+	\subsection{Showing that limits exist}
+	\paragraph{Squeeze theorem} If $(g(x)\leq f(x)\leq h(x)\ \forall x)
+		\land (\lim_Pg(x) = \lim_Ph(x) = L)$, then $\lim_Pf(x) = L$ too. ($P$ can
+	be $x\to\infty,\ x\to 1$, etc.)
+
+	\section{Continuity}
+	%% set lim #1#2#3#4{\TMPlim_{(#1,#2)\to(#3,#4)}}
+	Let $f:\R^2\to\R$. $f$ is continuous at $(a,b)$ if $\lim xyabf(x,y)=f(a,b)$
+	\paragraph{Theorem 2.4} if $f$ and $g$ are both cont. at
+	$(a,b)$, then $h = f\circ g$ is cont. too.
+
+	%% unset lim
+
+	\section{Partial Derivative $\p$}
+	\paragraph{Def. 2.6} $\frac{\p f}{\p x}=f_x(x,y):=\frac{f(x+h,y)-f(x,y)}h$
+	\paragraph{Clairaut's Thm} If $f$ is defined on $D$, and
+	$f_{xy}, f_{yx}$ are both cont, $f_{xy}=f_{yx}$.
+
+	\section{Differentiability}
+	\paragraph{Def. 2.12} $f$ is diff'able at $(a,b)$ if
+	$\exists$
+	a linear map $L:\R^2\to\R$ s.t.
+	%% set lim #1#2#3#4{\TMPlim_{(#1,#2)\to(#3,#4)}}
+	$$\lim h k 0 0 \frac{f(a+h,b+k)-f(a,b)-L(h,k)}{\sqrt{h^2+k^2}}=0$$
+	%% unset lim
+	$L$ is the total derivative of $f$ at $(a,b)$. \\\\
+	\build as $(h,k)$ shrinks, we get closer to $(a,b)$, and
+	$f(a+h,b+k)-f(a,b)$ behaves increasingly linearly (like $L(h,k)$).
+	In 1-D, the differrentiable curve approaches a straight line near
+	to the point of differentiation.
+	\\\\
+	As $L$ depends on $f$ and point $(a,b)$, we sometimes write $L$ as
+	$Df_{(a,b)}$. wgt.
+	\paragraph{Def. 2.13} $\{(x,y,L(x-a,y-b)+f(a,b))\}$ is tangent plane
+	to $\{(x,y,f(x,y))\}$ at the point $(a,b)$.
+	\paragraph{Prop. 2.14} If $f$ is diff'able, then
+	$L(h,k)=f_x(a,b)h+f_y(a,b)k$
+
+	\paragraph{Linear Approximation} $f(a+h,b+k)\approx f(a,b)+L(h,k)$
+	\section{Chain Rule}
+	\paragraph{One-variable CR} $\dd yt=\dd yx\dd xt$
+	\paragraph{Two-variable CR$_{(t)}$} $\dd zt=\pp zx\dd xt+\pp zy\dd yt$
+	\paragraph{Two-variable CR$_{(s,t)}$} $\pp zs=\pp zx\pp xs+\pp zy\pp ys$
+	\quad;\quad $\pp zt=\pp zx\pp xt+\pp zy\pp yt$ \\\\
+	\build use $\d x$ only when it gives full story (that's
+	probably why $\p$ is partial).
+
+	\section{Directional derivative $Df_{(a,b)}$}
+	Literally $L$. Also, since $L$ takes a 2-D input, it can technically
+	take a 2-D vector just as well:
+	%% set u {\mathbf{u}}
+	$$Df_{(a,b)}(\u)=\lim_{h\to0}\frac{f(a+hu_1,b+hu_2)-f(a,b)}{h}\quad\text{where \textbf{u}(is a)\textbf{nit vector}}$$
+	\build this can be sherlocked from the mentioned differentiability condition.
+
+	\section{Gradient vector $\g f$}
+	\subsection{Definition}
+	Again, literally $L$. Since $L:\R^2\to\R$, we can just as well
+	define $\g f$ as:
+	$\g f(a,b):=\mat{f_x(a,b)\\f_y(a,b)}$, and so if $\u=\mat{h\\k}$,
+	$$L(h,k)=Df_{(a,b)}(\u)=\g
+		f(a,b)\cdot\u=f_x(a,b)h+f_y(a,b)k$$
+
+	\subsection{Perpendicular vector to level sets}
+	If $\g f(a,b)\neq0$, then $\g f(a,b)\perp$ level curve of $f$ that
+	contains $(a,b)$
+	\paragraph{Result from notes:}
+	$$\frac\d{\d t}f(x(t),y(t))=\g f(x(t),y(t))\cdot\mat{x'(t)\\y'(t)}\quad\text{(Chain Rule)}$$
+	(3-D) if $\g f(a,b,c)\neq0$, then $\g f(a,b,c)\perp$ level set of
+	$f$ that contains $(a,b,c)$.
+	%% set r {\mathbf{r}} set a {\mathbf{a}} set n {\mathbf{n}}
+	Hence, the tangent plane's equation at $(a,b,c)$ with position
+	vector $\a$:
+
+	$$\g f(a,b,c)\cdot(\r-\a) = 0\quad\text{ (recall }\n\cdot(\r-\a)=0)$$
+	%% unset r n a
+
+	\section{Implicit partial differentiation}
+	Not much, so here's an example of taking $\pp zx$:
+	$$x^3+y^3+z^3+6xyz=1\;\longrightarrow\;3x^2+0+3z^2\pp zx+6\left(yz+xy\pp zx\right)=0$$
+	very useful when you don't actually have to evaluate any one variable.
+
+	\section{Critical Point}
+	All directional derivatives of $f$ at $(a,b)$ are 0 iff $f_x(a,b)=f_y(a,b)=0$.
+	Such $(a,b)$ are called critical points.
+
+	\paragraph{Extreme Value Theorem} if $f:D\to\R$ is cont. on a closed
+	and bounded set $D\subseteq\R^2$, then $f$ has at least one global
+	maximum, and one global minimum.
+
+	\subsection{Computing global maxima}
+	\textbf{1.} Get all crit. pts. of $f$ and their values \textbf{2.} Find extreme
+	values of $f$ along the boundary of $D$. \textbf{3.} Select the
+	largest value.
+
+
+	\section{Line integrals}
+	Let curve $C$ be parameterized by $R(t)=(x(t),y(t)),\ a\leq t\leq b$.
+	$$\int_Cf(x,y)\d s:=\int_a^bf(x(t),y(t))\norm{R'(t)}\d t$$
+	\paragraph{Observation}
+	$\textstyle\int_C1\d s=\int_a^b\norm{R'(t)}\d t=\text{Arc length of
+			$C$ by definition}$
+
+	\section{Vector fields}
+	%% set C {\mathbf{C}} set F {\mathbf{F}} set r {\mathbf{r}} set n {\mathbf{n}}
+	Line integrals over a vector field computes work done. Let $\C$ be
+	an oriented curve that traces $R(t)$ as $t$ goes from $a$ to $b$ in $a\leq t\leq b$.
+	$$W=\int_\C\F\cdot\d\r:=\int_a^b\F(x(t),y(t),z(t))\cdot R'(t)\d t=\int_a^bX\d x+Y\d y+Z\d z$$
+
+	\subsection{Conservative vector fields}
+	$\F$ is conservative on an open domain $D$ if it can be written as $\g f$.
+
+	\paragraph{Gradient Theorem} $\int_\C\g f\cdot\d\r=f(R(b))-f(R(a)),\
+		\C:R(t),\ t\in[a,b]$
+	Hence it's worth trying to write $\F=\g f$, to get
+	$\int_\C\F\cdot\d\r=f(R(b))-f(R(a))$.
+
+	\subsection{Testing for conservativity}
+	\paragraph{\texttt{!=}} Find $\C_1,\C_2$ s.t.
+	$\textstyle\int_{\C_1}\F\cdot\d\r\neq\int_{\C_2}\F\cdot\d\r$, or
+	a loop $\C$ s.t. $\textstyle\int_{\C}\F\cdot\d\r\neq0$
+	\paragraph{\texttt{==}} Find a $\g f$ such that $\F=\g f$.
+	\paragraph{Theorem} Let $\F\in D$  where $D$ is open and simply
+	connected. Then $\pp Xy=\pp Yx\land\pp Xz=\pp Zx\land\pp Yz=\pp Zy\iff\F$ is conservative.
+	\section{Green's Theorem}
+	Let $D$ be a region bounded by a counter-clockwise curve $\C$. Then
+	$$\int_\C\F\cdot\d\r=\iint_D\left(\pp Yx-\pp Xy\right)\d A$$
+	This can be used backwards to reduce $\textstyle\iint_D1\d A$ to
+	$\textstyle\int_\C\F\cdot\d\r$.
+	\paragraph{Convenience routines}
+	$$A=\int_\C x\d y=\int_\C -y\d x=\frac12\left(\int_\C x\d y+y\d x\right)$$
+	This is a direct result of Green's Theorem by picking nice values of $\F$.
+
+	\paragraph{Divergence} $\div\F:=\pp Xx+\pp Yy\left(+\pp Zz\right)_{\text{(for 3-D)}}$
+
+	\paragraph{Green's Theorem V2} (total outward flux)
+	$$\int_\C\F\cdot\n\d s=\iint_D\div\F\d A,\quad\text{where
+			$\norm\n=1$ and $\n\perp\C$ outwards}$$
+	%% set comp {\mathrm{comp}}
+	Note that $\F\cdot\n=\comp_\n\F$
+	%% unset comp
+
+	\section{Surface integrals}
+	\paragraph{Parameterizing surfaces} $R(u,v)=(x(u,v),y(u,v),z(u,v))$
+	$$R_u(u,v):=\mat{x_u(u,v)\\y_u(u,v)\\z_u(u,v)}\text{, and }\;
+		R_u(u,v):=\mat{x_u(u,v)\\y_u(u,v)\\z_u(u,v)}$$
+	\paragraph{Defining surface integrals} (S is parameterized by $R(u,v)$)
+	$$\iint_Sf(x,y,z)\d S:=\iint_Df(x(u,v),y(u,v),z(u,v))\norm{R_u\times R_v}\d A$$
+	\paragraph{Corollary} if $z=g(x,y)$,
+	$=\iint_Df(x,y,g(x,y))\sqrt{\textstyle\left(\pp
+			gx\right)^2+\left(\pp gy\right)^2+1}\d A$
+
+	%% set S {\mathbf{S}}
+	\paragraph{Surface area} $A(S)=\iint_S1\d S$
+	\paragraph{Flux of $\F$ across $\S$} $\iint_\S\F\cdot\d\S:=\iint_S\F\cdot\n\d S=\iint_D\F\cdot(R_u\times R_v)\d A$
+	\paragraph{Corollary} if $z=g(x,y)$, $=\iint_D-X\pp gx-Y\pp gy+Z\d A$
+	\section{Gauss' Theorem}
+	$$\iint_\S\F\cdot\d\S=\iiint_E\div\F\d V$$ \\
+	Flux through a surface = divergence of the solid it surrounds.
+	\section{Stokes' Theorem}
+
+	%% unset F C r n
+
+	%% unset u
+\end{multicols*}
+\end{document}
