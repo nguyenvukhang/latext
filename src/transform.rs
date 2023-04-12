@@ -1,9 +1,10 @@
+const NAMESPACER: &str = "LatexTransformTMP";
 pub fn set(cmd: &str, val: &str) -> String {
-    format!("\\let\\TMP{cmd}\\{cmd}\\def\\{cmd}{val}",)
+    format!("\\let\\{NAMESPACER}{cmd}\\{cmd}\\def\\{cmd}{val}",)
 }
 
 pub fn unset(cmd: &str) -> String {
-    format!("\\let\\{cmd}\\TMP{cmd}")
+    format!("\\let\\{cmd}\\{NAMESPACER}{cmd}")
 }
 
 pub fn transform(raw_line: &str) -> Option<String> {

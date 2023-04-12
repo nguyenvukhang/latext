@@ -32,8 +32,10 @@ impl Latex {
         let reader = BufReader::new(file);
         for line in reader.lines().filter_map(|v| v.ok()) {
             let line = transform::transform(&line).unwrap_or(line);
-            let line = line.trim();
-            writeln!(self.stdin, "{line}")?;
+            if !line.trim().is_empty() {
+                // println!("{line}");
+                writeln!(self.stdin, "{line}")?;
+            }
         }
         let output = self.child.wait_with_output()?;
         match output.status.success() {
