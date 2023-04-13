@@ -6,16 +6,17 @@ mod transform;
 use error::{Error, Result};
 use latex::Latex;
 
+use std::env;
 use std::fs::File;
+use std::path::PathBuf;
 use std::process::ExitCode;
-use std::{env, path::PathBuf};
 
-fn first_arg() -> Result<String> {
-    Ok(env::args().skip(1).next().ok_or(Error::InsufficientArgs)?)
+fn arg(index: usize) -> Result<String> {
+    Ok(env::args().nth(index).ok_or(Error::InsufficientArgs)?)
 }
 
 fn try_main() -> Result<()> {
-    let filepath = match PathBuf::from(first_arg()?) {
+    let filepath = match PathBuf::from(arg(1)?) {
         v if v.is_absolute() => v,
         v => env::current_dir()?.join(v),
     };

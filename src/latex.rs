@@ -5,8 +5,7 @@ use std::fs;
 use std::fs::File;
 use std::io::Write;
 use std::io::{BufRead, BufReader};
-use std::process::{Child, ChildStdin};
-use std::process::{Command, Stdio};
+use std::process::{Child, ChildStdin, Command, Stdio};
 
 pub struct Latex {
     child: Child,
@@ -24,12 +23,12 @@ impl Latex {
         c.arg(jobname);
         c.stdin(Stdio::piped()).stderr(Stdio::piped()).stdout(Stdio::piped());
         let mut child = c.spawn()?;
+        // safety of this unwrap is guaranteed after successfully spawning
         let stdin = child.stdin.take().unwrap();
         Ok(Self { child, stdin })
     }
 
     pub fn build(mut self, file: &File) -> Result<()> {
-        // safety of this unwrap is guaranteed after piping it
         fs::create_dir_all(BUILD_DIR)?;
         BufReader::new(file)
             .lines()
