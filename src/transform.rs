@@ -7,33 +7,32 @@ pub fn unset(cmd: &str) -> String {
     format!("\\let\\{cmd}\\{NAMESPACER}{cmd}")
 }
 
-pub fn transform(raw_line: &str) -> Option<String> {
-    let mut line = raw_line;
+pub fn transform(mut line: &str) -> Option<String> {
     line = line.trim_start();
     if !line.starts_with("%%") {
         return None;
     }
     line = &line[2..].trim_start();
     let words = line.split(' ').collect::<Vec<&str>>();
-    let mut res = String::new();
-    let mut slice = words.as_slice();
+    let mut buffer = String::new();
+    let mut s = words.as_slice();
 
-    while !slice.is_empty() {
-        let current = slice[0];
-        if current == "set" && slice.len() >= 3 {
-            res.push_str(&set(slice[1], slice[2]));
-            slice = &slice[3..];
+    while !s.is_empty() {
+        let current = s[0];
+        if current == "set" && s.len() >= 3 {
+            buffer.push_str(&set(s[1], s[2]));
+            s = &s[3..];
             continue;
         }
         if current == "unset" {
-            slice = &slice[1..];
-            while !slice.is_empty() {
-                res.push_str(&unset(slice[0]));
-                slice = &slice[1..];
+            s = &s[1..];
+            while !s.is_empty() {
+                buffer.push_str(&unset(s[0]));
+                s = &s[1..];
             }
             continue;
         }
-        slice = &slice[1..];
+        s = &s[1..];
     }
-    Some(res)
+    Some(buffer)
 }

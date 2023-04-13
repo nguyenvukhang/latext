@@ -7,7 +7,7 @@ use std::process::Output;
 pub enum Error {
     IoError(io::Error),
     InsufficientArgs,
-    FileStemNotFound,
+    FilenameNotFound,
     PdfLatexErr(Output),
 }
 
@@ -15,11 +15,11 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut w = |x: &str| write!(f, "{x}");
         use Error::*;
         match self {
-            InsufficientArgs => {
-                write!(f, "Please provide a .tex file to build.")
-            }
+            FilenameNotFound => w("Unable to extract filename."),
+            InsufficientArgs => w("Please provide a .tex file to build."),
             PdfLatexErr(v) => {
                 let lines = v
                     .stdout
@@ -35,7 +35,7 @@ impl fmt::Display for Error {
                 }
                 Ok(())
             }
-            e => write!(f, "{e:?}"),
+            IoError(e) => write!(f, "{e:?}"),
         }
     }
 }

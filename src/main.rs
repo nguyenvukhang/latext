@@ -14,21 +14,15 @@ fn first_arg() -> Result<String> {
     Ok(env::args().skip(1).next().ok_or(Error::InsufficientArgs)?)
 }
 
-fn src_filepath() -> Result<PathBuf> {
-    Ok(env::current_dir()?.join(first_arg()?))
-}
-
-fn src_file() -> Result<(File, String)> {
-    let path = src_filepath()?;
-    let file = File::open(&path)?;
-    let name = path.file_stem().ok_or(Error::FileStemNotFound)?;
-    Ok((file, name.to_string_lossy().to_string()))
-}
-
 fn try_main() -> Result<()> {
-    let (src_file, job_name) = src_file()?;
-    Latex::new(&job_name)?.build(&src_file)?;
-    Ok(())
+    let filepath = match PathBuf::from(first_arg()?) {
+        v if v.is_absolute() => v,
+        v => env::current_dir()?.join(v),
+    };
+    let job_name = filepath.file_stem().ok_or(Error::FilenameNotFound)?;
+    let latex = Latex::new(&job_name)?;
+    let src_file = File::open(&filepath)?;
+    latex.build(&src_file)
 }
 
 fn main() -> ExitCode {
