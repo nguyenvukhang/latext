@@ -16,10 +16,7 @@ fn arg(index: usize) -> Result<String> {
 }
 
 fn try_main() -> Result<()> {
-    let filepath = match PathBuf::from(arg(1)?) {
-        v if v.is_absolute() => v,
-        v => env::current_dir()?.join(v),
-    };
+    let filepath = PathBuf::from(arg(1)?);
     let job_name = filepath.file_stem().ok_or(Error::FilenameNotFound)?;
     let latex = Latex::new(&job_name)?;
     let src_file = File::open(&filepath)?;

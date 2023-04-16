@@ -25,7 +25,7 @@ impl fmt::Display for Error {
                     .stdout
                     .lines()
                     .filter_map(|v| v.ok())
-                    .skip_while(|v| !v.starts_with("*!"))
+                    .skip_while(|v| !v.starts_with("*!") && !v.starts_with('!'))
                     .collect::<Vec<String>>();
                 for i in 0..lines.len() {
                     match i + 1 < lines.len() {
