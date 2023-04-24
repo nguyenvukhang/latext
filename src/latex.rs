@@ -1,5 +1,5 @@
 use crate::error::{Error, Result};
-use crate::transform::transform;
+use crate::transform::{replace, transform};
 use std::ffi::OsStr;
 use std::fs;
 use std::fs::File;
@@ -34,6 +34,7 @@ impl Latex {
             .lines()
             .filter_map(|v| v.ok())
             .map(|v| transform(&v).unwrap_or(v))
+            // .map(|v| replace(&v))
             .filter(|v| !v.trim().is_empty())
             .for_each(|v| {
                 writeln!(self.stdin, "{v}").ok();

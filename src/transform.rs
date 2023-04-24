@@ -32,3 +32,10 @@ pub fn transform(mut line: &str) -> Option<String> {
     }
     Some(buffer)
 }
+
+pub fn replace(line: &str) -> String {
+    use aho_corasick::AhoCorasick as AC;
+    let from = &["×"];
+    let to = &["\\times"];
+    AC::new(from).unwrap().replace_all(line, to)
+}
